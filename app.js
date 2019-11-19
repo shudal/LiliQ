@@ -77,6 +77,7 @@ App({
           console.log(res);
           if (res.data.code == 0) {  
             app.globalData.userInfo.userid = res.data.data.openid
+            console.log("get openid from login():" + app.globalData.userInfo.userid)
           }
       }
     })

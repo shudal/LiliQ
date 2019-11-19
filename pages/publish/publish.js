@@ -9,6 +9,13 @@ Page({
         userInfo: null
     },
     onShow: function (e) {
+      qq.showShareMenu({
+  showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
+})
+      let that = this
+      that.initData() 
+    },
+    initData() {
       let that = this
       console.log(app.globalData.userInfo)
       if (that.data.userInfo == null && app.globalData.userInfo != null) {
@@ -104,6 +111,20 @@ Page({
       flag = false
       noti = "内容太少拉"
     }
+
+    if (formData.userid != null) {
+
+    } else if (formData.userid == undefined && app.globalData.userInfo.userid != null) {
+      formData.userid = app.globalData.userInfo.userid
+      console.log("重新设置userid")
+      that.setData({
+        formData: that.data.formData
+      })
+    } else {
+      flag = false
+      noti = "请一会儿后再提交"
+    }
+
     if (flag == false) {
       wx.showModal({
           title: '失败 ',

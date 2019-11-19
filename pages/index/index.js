@@ -45,11 +45,23 @@ Page({
                     }
                 } 
                 that.setData({
-                    posts: that.data.posts, 
-                    [`imgs.${imgCount}`]: res.data.data,
+                    [`posts[${i}].rimg`]: that.data.posts[i].rimg,
                     imgCount: imgCount
                 })
-                console.log(that.data.posts)
+                let theImg = res.data.data.replace(/[\r\n]/g, "")
+                that.setData({ 
+                        [`imgs.${imgCount}`]: theImg,
+                })
+                /*
+                try { 
+                    that.setData({ 
+                        [`imgs.${imgCount}`]: res.data.data,
+                    })
+                } catch (err) {
+                    console.log("设置图片错误");
+                    console.log(err)
+                } 
+                */
             }
         }
         })  
@@ -121,6 +133,9 @@ Page({
         that.realGetPost()
     },
     realGetPost() {
+        qq.showShareMenu({
+  showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
+})
         let that = this
         console.log("maxPage=" + that.data.maxPage)
         console.log("apge=" + that.data.page)
@@ -172,5 +187,37 @@ Page({
             complete(res) { 
             }
         }); 
+    },
+    inc: function (e) {
+        let that = this
+        let formData = {}
+        formData.id = e.currentTarget.dataset.id
+        formData.field = e.currentTarget.dataset.field
+        formData.n = 1
+        wx.request({
+            url: app.globalData.SERVER_URL + "index/post/inc",
+            method: "POST",
+            header: { 'content-type':'application/x-www-form-urlencoded'
+            },
+            data: formData,
+            success (res) {
+                console.log(res)
+                if (res.data.code == 0) {
+                     for (let i=0; i<that.data.posts.length; ++i) {
+                         
+                         if (that.data.posts[i].id == formData.id) {
+                             that.data.posts[i].gvol += 1
+                             that.setData({
+                                 [`posts[${i}]`]: that.data.posts[i]
+                             })
+                             break
+                         }
+                     }
+                } else { 
+                }
+            },
+            complete (res) {  
+            }
+        })
     }
 })

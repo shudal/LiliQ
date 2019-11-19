@@ -22,9 +22,9 @@
       </view>
     </view>
     <view class="text-gray text-sm text-right padding">
-      <text class="cuIcon-attentionfill margin-lr-xs"></text> 10
-      <text class="cuIcon-appreciatefill margin-lr-xs"></text> 20
-      <text class="cuIcon-messagefill margin-lr-xs"></text> 30
+      <text class="cuIcon-attentionfill margin-lr-xs"></text> {{ item.rvol }}
+      <text class="cuIcon-appreciatefill margin-lr-xs" bindtap="inc" data-field="gvol" data-id="{{ item.id }}"></text> {{ item.gvol }}
+      <text class="cuIcon-messagefill margin-lr-xs"></text> {{ item.cvol }}
     </view>
   </view>
 </view>
