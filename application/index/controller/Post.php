@@ -57,6 +57,7 @@ class Post
         $list = model('post')->where('status','neq',-1)->order('id', 'desc')->paginate($pageSize, false, [
             "page" => $page
         ])->each(function($item, $key) {
+            model('post')->where('id',$item['id'])->setInc('rvol');
             $item['cretime'] = date('Y年m月d日 H:i', $item['cretime']);
         });
         return apiReturn(0,"OK", $list);
@@ -73,5 +74,14 @@ class Post
         }
         $img = model('Pimg')->get($data['imgid']);
         return apiReturn(0,"OK",$img->img);
+    }
+    public function inc() {
+        if (!request()->isPost()) {
+            return 'hi';
+        }
+        $data = input('post.');
+
+        model('post')->where('id', $data['id'])->setInc($data['field'], $data['n']);
+        return apiReturn(0, "OK", "");
     }
 }
