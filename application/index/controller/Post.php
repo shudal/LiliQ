@@ -84,4 +84,31 @@ class Post
         model('post')->where('id', $data['id'])->setInc($data['field'], $data['n']);
         return apiReturn(0, "OK", "");
     }
+    public function comment() {
+        if (request()->isPost()) {
+            /*
+            $data = input('post.');
+            model('comment')->save($data);
+            model('post')->where('id', $data['postid'])->setInc('cvol');
+             */
+            return apReturn(0, "OK", "");
+        } else {
+            $data = input('get.');
+            $cs = model('comment')->where('postid', '=', $data['postid'])->where('status', '<>', '-1')->select();
+            for ($i=0; $i<count($cs); ++$i) {
+                $cs[$i]['cretime'] = date('Y年m月d日 H:i', $cs[$i]['cretime']);
+            }
+            return apiReturn(0, "OK", $cs);
+        }
+    }
+    public function post() {
+        if (!request()->isGet()) {
+            return 'hi';
+        }
+        $data = input('get.');
+        $post = model('post')->where('id', $data['postid'])->find();
+        $post['cretime'] = date('Y年m月d日 H:i', $post['cretime']);
+
+        return apiReturn(0, "OK", $post);
+    }
 }
