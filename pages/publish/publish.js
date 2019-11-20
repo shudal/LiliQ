@@ -59,35 +59,35 @@ Page({
     });
   },
   myRealSubmit() {
-              let that = this 
-              console.log(that.data.formData)  
-              wx.request({
-                url: app.globalData.SERVER_URL + "index/post/add",
-                method: "POST",
-                header: { 'content-type':'application/x-www-form-urlencoded'
-                },
-                data: that.data.formData,
-                success (res) {
-                    if (res.data.code == 0) {
-                        console.log(res);
-                        wx.showModal({
-                            title: '成功',
-                            content: '发布成功',
-                            showCancel: false
-                        })
-                    } else {
-                        wx.showModal({
-                            title: '失败 ',
-                            content: '出现未知错误',
-                            showCancel: false
-                        })
-                    }
-                },
-                complete (res) { 
-                  console.log("ok")
-                  wx.hideLoading()
-                }
-            })
+    let that = this 
+    console.log(that.data.formData)  
+    wx.request({
+      url: app.globalData.SERVER_URL + "index/post/add",
+      method: "POST",
+      header: { 'content-type':'application/x-www-form-urlencoded'
+      },
+      data: that.data.formData,
+      success (res) {
+          if (res.data.code == 0) {
+              console.log(res);
+              wx.showModal({
+                  title: '成功',
+                  content: '发布成功',
+                  showCancel: false
+              })
+          } else {
+              wx.showModal({
+                  title: '失败 ',
+                  content: '出现未知错误',
+                  showCancel: false
+              })
+          }
+      },
+      complete (res) { 
+        console.log("ok")
+        wx.hideLoading()
+      }
+    })
   },
   checkLogin() {
     let that = this

@@ -14,19 +14,19 @@
         </view>
       </view>
     </view>
-    <view class="text-content">
+    <view class="text-content" bindtap="showDetail" data-id="{{ item.id }}">
      {{ item.content }}
     </view>
-    <view class="grid flex-sub padding-lr {{isCard?'col-3 grid-square':'col-1'}}">
+    <view class="grid flex-sub padding-lr {{isCard?'col-3 grid-square':'col-1'}}" bindtap="showDetail" data-id="{{ item.id }}">
       <view class="bg-img {{isCard?'':'only-img'}}"  wx:for="{{ item.rimg }}" wx:for-item="aPicIndex" style="background-image:url('{{ imgs[aPicIndex] }}');">
       </view>
     </view>
     <view class="text-gray text-sm text-right padding">
       <text class="cuIcon-attentionfill margin-lr-xs"></text> {{ item.rvol }}
       <text class="cuIcon-appreciatefill margin-lr-xs" bindtap="inc" data-field="gvol" data-id="{{ item.id }}"></text> {{ item.gvol }}
-      <text class="cuIcon-messagefill margin-lr-xs"></text> {{ item.cvol }}
+      <text class="cuIcon-messagefill margin-lr-xs" bindtap="showDetail" data-id="{{ item.id }}"></text> {{ item.cvol }}
     </view>
   </view>
 </view>
-<view wx:if="{{ showedAll }}" class="cu-load bg-grey over"></view>
+<view wx:if="{{ showedAll }}" class="cu-load bg-grey over"></view> 
 

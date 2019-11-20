@@ -1,0 +1,250 @@
+let app = getApp()
+Page({
+    data: {
+        formData: {},
+        comments: [],
+        postid: null,
+        posts: [],
+        isCard: true,
+        imgCount: 0,
+        imgs: {},
+        avas: {},
+        InputBottom: 0
+    },
+    onLoad: function (e) {
+        console.log("onLoad:")
+        console.log(e)
+        this.setData({
+            postid: e.postid
+        })
+        this.k(this.data.postid)
+    },
+    onShow: function (e) { 
+
+    },
+    k(postid) {
+        this.getPost(postid)
+        this.getCommentFor(postid)
+        this.setData({ 
+            [`formData.postid`]: postid
+        })
+        if (this.data.formData.userid == null && app.globalData.userInfo.userid != null) {
+            this.setData({
+                [`formData.userid`]: app.globalData.userInfo.userid
+            })
+        } 
+    },
+    getCommentFor: function (id) {
+        let that = this
+        wx.request({
+            url: app.globalData.SERVER_URL + "index/post/comment?postid=" + id, 
+            method: "GET",
+            success(res) {
+                console.log(res);
+                if (res.data.code == 0) {  
+                    for (let i=0; i<res.data.data.length; ++i) {
+                        that.getAva(res.data.data[i].userid)
+                        res.data.data[i].index = i + 1
+                    } 
+                    that.setData({
+                        comments: res.data.data
+                    }) 
+                }
+            },
+            complete(res) { 
+            }
+        }) 
+    },
+    getPost: function (postid) {
+        let that = this 
+        wx.request({
+            url: app.globalData.SERVER_URL + "index/post/post?postid=" + postid, 
+            method: "GET",
+            success(res) {
+                console.log(res);
+                if (res.data.code == 0) {    
+                    that.data.posts[0] = res.data.data
+                    that.data.posts[0].rimg = []
+                    that.setData({
+                        [`posts[0]`]: that.data.posts[0]
+                    })
+                    if (that.data.avas[res.data.data.userid] == undefined) {
+                        that.getAva(res.data.data.userid)
+                    }
+                    let aPostImgs = res.data.data.img.split("|") 
+                    for (let k=0; k<aPostImgs.length; ++k) {
+                        that.getImgFor(postid, aPostImgs[k])
+                    } 
+                }
+            }
+        })
+    },
+    getAva(userid) {
+        let that = this 
+        wx.request({
+            url: app.globalData.SERVER_URL + "index/post/img?userid=" + userid, 
+            method: "GET",
+            success(res) {
+                console.log(res);
+                if (res.data.code == 0) {    
+                    that.setData({
+                        [`avas.${userid}`]: res.data.data
+                    })
+                }
+            }
+        })  
+    },
+    getImgFor(pid, imgId) {
+        let that = this 
+        wx.request({
+            url: app.globalData.SERVER_URL + "index/post/img?imgid=" + imgId, 
+            method: "GET",
+            success(res) {
+                console.log(res);
+                if (res.data.code == 0) {    
+                    let imgCount = that.data.imgCount
+                    imgCount += 1  
+                    that.data.posts[0].rimg.push(imgCount)
+                    that.setData({
+                        posts: that.data.posts,
+                        imgCount: that.data.imgCount
+                    })
+                    let theImg = res.data.data.replace(/[\r\n]/g, "")
+                    that.setData({ 
+                            [`imgs.${imgCount}`]: theImg,
+                    }) 
+                }
+            }
+        })  
+    },
+    mySubmit(e) {  
+        let that = this 
+        if (!that.checkInput()) {
+            return
+        }
+        console.log(that.data.formData)  
+        wx.showLoading({
+            title: "发送ing",
+            mask: true
+        })
+        wx.request({
+            url: app.globalData.SERVER_URL + "index/comment/add",
+            method: "POST",
+            header: { 'content-type':'application/x-www-form-urlencoded'
+            },
+            data: that.data.formData,
+            success (res) {
+                if (res.data.code == 0) { 
+                    that.getCommentFor(that.data.postid)
+                    that.data.posts[0].cvol += 1
+                    that.setData({
+                        posts: that.data.posts
+                    })
+                } else {
+                    wx.showToast({
+                        icon: "none",
+                        title: "发布失败 出现令人困惑的错误"
+                    })
+                }
+            },
+            complete (res) {  
+                wx.hideLoading()
+            }
+        })
+    },
+    checkInput() {
+        let that = this;
+        let formData = that.data.formData
+        console.log(formData)
+        let flag = 1
+        let noti = "出现未知错误"
+        if (formData.userid == null) {
+            flag = 0; noti = "请前往 我的 页面授权获取您的基本信息" 
+        }
+        if (formData.content == null || formData.content == "") {
+            flag = 0; noti = "内容太少拉"
+        }
+        if (flag == 0) {
+            wx.showModal({
+                title: '失败 ',
+                content: noti,
+                showCancel: false
+            })
+            return false
+        }
+        return true
+    }, 
+    formInputChange: function(e) {
+        console.log(e)
+        const {field} = e.currentTarget.dataset;
+        this.setData({
+            [`formData.${field}`]: e.detail.value
+        });
+        console.log(this.data.formData);
+    }, 
+    incComment: function (e) {
+        let that = this
+        let formData = {}
+        formData.id = e.currentTarget.dataset.id
+        formData.field = e.currentTarget.dataset.field
+        formData.n = 1
+        wx.request({
+            url: app.globalData.SERVER_URL + "index/comment/inc",
+            method: "POST",
+            header: { 'content-type':'application/x-www-form-urlencoded'
+            },
+            data: formData,
+            success (res) {
+                console.log(res)
+                if (res.data.code == 0) { 
+                    for (let i=0; i<that.data.comments.length; ++i) {
+                        if (that.data.comments[i].id == formData.id) {
+                            that.data.comments[i].gvol += 1;
+                            that.setData({
+                                [`comments[${i}]`]: that.data.comments[i]
+                            })
+                            break
+                        }
+                    } 
+                } 
+            },
+            complete (res) {  
+            }
+        })
+    },
+    inc: function (e) {
+        let that = this
+        let formData = {}
+        formData.id = e.currentTarget.dataset.id
+        formData.field = e.currentTarget.dataset.field
+        formData.n = 1
+        wx.request({
+            url: app.globalData.SERVER_URL + "index/post/inc",
+            method: "POST",
+            header: { 'content-type':'application/x-www-form-urlencoded'
+            },
+            data: formData,
+            success (res) {
+                console.log(res)
+                if (res.data.code == 0) { 
+                    that.data.posts[0].gvol += 1
+                    that.setData({
+                        posts: that.data.posts 
+                    })     
+                } 
+            },
+            complete (res) {  
+            }
+        })
+    },
+    InputFocus(e) {
+        this.setData({
+        InputBottom: e.detail.height
+        })
+    },
+    InputBlur(e) {
+        this.setData({
+        InputBottom: 0
+        })
+    }
+})

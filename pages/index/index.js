@@ -13,20 +13,9 @@ Page({
             "-1": "https://ossweb-img.qq.com/images/lol/web201310/skin/big10006.jpg"
         },
         showedAll: false, 
+        formData: null,
+        comments: []
     },
-    getImgSize(base64url) {
-        //获取base64图片大小，返回KB数字
-        var str = base64url.replace('data:image/jpeg;base64,', '');//这里根据自己上传图片的格式进行相应修改
-        
-        var strLength = str.length;
-        var fileLength = parseInt(strLength - (strLength / 8) * 2);
-
-        // 由字节转换为KB
-        var size = "";
-        size = (fileLength / 1024).toFixed(2); 
-        return parseInt(size);
-
-  },
     getImgFor(pid, imgId) {
         let that = this 
         wx.request({
@@ -130,12 +119,12 @@ Page({
     },
     onLoad: function (e) {
         let that = this  
+        qq.showShareMenu({
+            showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
+        })
         that.realGetPost()
     },
-    realGetPost() {
-        qq.showShareMenu({
-  showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
-})
+    realGetPost() { 
         let that = this
         console.log("maxPage=" + that.data.maxPage)
         console.log("apge=" + that.data.page)
@@ -219,5 +208,10 @@ Page({
             complete (res) {  
             }
         })
-    }
+    },
+    showDetail(e) {
+        wx.navigateTo({
+            url: './../detail/detail?postid=' + e.currentTarget.dataset.id
+        })
+    }  
 })
