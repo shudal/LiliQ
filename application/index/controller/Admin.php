@@ -29,6 +29,25 @@ class Admin {
                 self::delC($d);
             }
         }
+        if (!empty($data['commentid'])) {
+            $d = [
+                'id' => $data['commentid']
+            ];
+            self::delC($d);
+        }
+        return apiReturn(0, "OK", "");
+    }
+    public function getComments() {
+        $d = model('comment')->where('status', '<>', -1)->select();
+        return apiReturn(0, "OK", $d);
+    }
+    public function delPost() {
+        $data = input('get.');
+        if (!empty($data['postid'])) {
+            $p = model('post')->where('id',$data['postid'])->find();
+            $p->status = -1;
+            $p->save();
+        }
         return apiReturn(0, "OK", "");
     }
 }
