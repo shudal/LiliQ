@@ -7,6 +7,16 @@
 }
 
 page {
-    font-family: -apple-system,SF UI Text,Helvetica Neue,Helvetica,Arial,sans-serif;
-
+    font-family: -apple-system,SF UI Text,Helvetica Neue,Helvetica,Arial,sans-serif; 
+}
+page {
+    background-image:
+        linear-gradient(rgba(255,255,255,.3) 1px, transparent 0),
+        linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 0),
+        linear-gradient(white 1px, transparent 0),
+        linear-gradient(90deg, white 1px, transparent 0);
+background-size: 15px 15px, 15px 15px, 75px 75px, 75px 75px;
+}
+.cu-card {
+    padding: 18rpx
 }

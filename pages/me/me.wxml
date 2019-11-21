@@ -1,5 +1,5 @@
-<view class="margin-xl padding-xl bg-white radius shadow shadow-lg">
-  <view class="flex justify-center">
+ 
+  <view class="flex justify-center" style="padding-top:60rpx">
     <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo" class='cu-btn round bg-green shadow'> 获取头像昵称 </button>
     <block wx:else>
       <view class='text-center'>
@@ -7,8 +7,39 @@
         <view class="padding">{{userInfo.nickName}}</view>
       </view>
     </block>
-  </view>
-</view>
+  </view> 
+  
+<!--
 <view class="text-center margin-top">
   <text class="text-grey text-xl">{{motto}}</text>
+</view>
+-->
+<view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg radius" style="margin-top:0"> 
+    <view class="cu-item arrow " bindtap="showModal" data-target="aboutLili">
+      <view class="content">
+        <image src="/static/img/logo.png" class="png" mode="aspectFit"></image>
+        <text class="text-grey">关于理里表白墙</text>
+      </view>
+    </view>  
+    <view class="cu-item arrow">
+      <button class="cu-btn content" open-type="feedback">
+        <text class="cuIcon-writefill text-cyan"></text>
+        <text class="text-grey" bindtap="showModal" data-target="advice">意见反馈</text>
+      </button>
+    </view> 
+  </view>
+  <view class="cu-tabbar-height"></view>
+
+  <view class="cu-modal {{modalName=='aboutLili'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-bar bg-white justify-end">
+      <view class="content">关于理里</view>
+      <view class="action" bindtap="hideModal">
+        <text class="cuIcon-close text-red"></text>
+      </view>
+    </view>
+    <view class="padding-xl">
+      一只奔跑ing的墙~
+    </view>
+  </view>
 </view>

@@ -1,4 +1,4 @@
-let app = getApp();
+let app = getApp(); 
 Page({
     data: {
         posts: [ 
@@ -183,6 +183,15 @@ Page({
         formData.id = e.currentTarget.dataset.id
         formData.field = e.currentTarget.dataset.field
         formData.n = 1
+        for (let i=0; i<that.data.posts.length; ++i) { 
+            if (that.data.posts[i].id == formData.id) {
+                that.data.posts[i].gvol += 1
+                that.setData({
+                    [`posts[${i}]`]: that.data.posts[i]
+                })
+                break
+            }
+        }
         wx.request({
             url: app.globalData.SERVER_URL + "index/post/inc",
             method: "POST",
@@ -192,16 +201,7 @@ Page({
             success (res) {
                 console.log(res)
                 if (res.data.code == 0) {
-                     for (let i=0; i<that.data.posts.length; ++i) {
-                         
-                         if (that.data.posts[i].id == formData.id) {
-                             that.data.posts[i].gvol += 1
-                             that.setData({
-                                 [`posts[${i}]`]: that.data.posts[i]
-                             })
-                             break
-                         }
-                     }
+                     
                 } else { 
                 }
             },
@@ -215,3 +215,5 @@ Page({
         })
     }  
 })
+
+ 

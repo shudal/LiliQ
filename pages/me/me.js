@@ -9,7 +9,8 @@ Page({
     motto: '喵喵喵!',
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
+    modalName: null
   },
   //事件处理函数
   bindViewTap: function() {
@@ -57,5 +58,15 @@ Page({
       hasUserInfo: true
     })
     app.login()
-  }
+  }, 
+  showModal(e) {
+    this.setData({
+      modalName: e.currentTarget.dataset.target
+    })
+  },
+  hideModal(e) {
+    this.setData({
+      modalName: null
+    })
+  },
 })

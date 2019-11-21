@@ -25,7 +25,7 @@
 		</view>
 	</view>
     <view class="cu-form-group margin-top">
-		<textarea maxlength="-1" disabled="{{modalName!=null}}" data-field="content" bindinput="formInputChange"  placeholder="内容"></textarea>
+		<textarea maxlength="-1" disabled="{{modalName!=null}}" data-field="content" bindinput="formInputChange"  placeholder="言语传达心意~"></textarea>
 	</view>
 	
 	<view class="padding flex flex-direction">

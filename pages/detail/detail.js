@@ -11,7 +11,10 @@ Page({
         avas: {},
         InputBottom: 0
     },
-    onLoad: function (e) {
+    onLoad: function (e) { 
+      qq.showShareMenu({
+  showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
+})
         console.log("onLoad:")
         console.log(e)
         this.setData({
@@ -107,7 +110,7 @@ Page({
                     that.data.posts[0].rimg.push(imgCount)
                     that.setData({
                         posts: that.data.posts,
-                        imgCount: that.data.imgCount
+                        imgCount: imgCount
                     })
                     let theImg = res.data.data.replace(/[\r\n]/g, "")
                     that.setData({ 
@@ -188,6 +191,15 @@ Page({
         formData.id = e.currentTarget.dataset.id
         formData.field = e.currentTarget.dataset.field
         formData.n = 1
+        for (let i=0; i<that.data.comments.length; ++i) {
+            if (that.data.comments[i].id == formData.id) {
+                that.data.comments[i].gvol += 1;
+                that.setData({
+                    [`comments[${i}]`]: that.data.comments[i]
+                })
+                break
+            }
+        } 
         wx.request({
             url: app.globalData.SERVER_URL + "index/comment/inc",
             method: "POST",
@@ -197,15 +209,7 @@ Page({
             success (res) {
                 console.log(res)
                 if (res.data.code == 0) { 
-                    for (let i=0; i<that.data.comments.length; ++i) {
-                        if (that.data.comments[i].id == formData.id) {
-                            that.data.comments[i].gvol += 1;
-                            that.setData({
-                                [`comments[${i}]`]: that.data.comments[i]
-                            })
-                            break
-                        }
-                    } 
+                    
                 } 
             },
             complete (res) {  

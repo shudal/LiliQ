@@ -1,8 +1,15 @@
+<script type="text/javascript" charset="utf-8"  src="./L2Dwidget.0.min.js"></script>
+<script type="text/javascript" charset="utf-8"  src="./L2Dwidget.min.js"></script>
+<script type="text/javascript">
+   
+</script>
+
 <view class="cu-card dynamic {{isCard?'no-card':''}}" wx:for="{{ posts }}">
   <view class="cu-item shadow">
     <view class="cu-list menu-avatar">
       <view class="cu-item">
-        <view class="cu-avatar round lg" style="background-image:url('{{ avas[item.userid] }}');"></view>
+        <view class="cu-avatar round lg" style="background-image:url('{{ avas[item.userid] }}');" wx:if="{{ avas[item.userid] != null }}"></view>
+        <view wx:else class="cu-avatar lg round  bg-grey">{{ item.nickname[0] }}</view>
         <view class="content flex-sub">
           <view>{{ item.nickname }}
             <view style="padding-left: 3px">
