@@ -19,10 +19,11 @@
      {{ item.content }}
     </view>
     <view class="grid flex-sub padding-lr {{isCard?'col-3 grid-square':'col-1'}}">
-      <view class="bg-img {{isCard?'':'only-img'}}"  wx:for="{{ item.rimg }}" wx:for-item="aPicIndex" style="background-image:url('{{ imgs[aPicIndex] }}');">
+      <view class="bg-img {{isCard?'':'only-img'}}"  wx:for="{{ item.rimg }}" wx:for-item="aPicIndex" style="background-image:url('{{ imgs[aPicIndex] }}');" data-imgid="{{ cimgids[aPicIndex] }}" bindtap="showBigImg">
       </view>
     </view>
     <view class="text-gray text-sm text-right padding">
+      <text wx:if="{{ item.alladd == 1}}" class="cuIcon-friendadd margin-lr-xs" bindtap="addFriend"></text>  
       <text class="cuIcon-attentionfill margin-lr-xs"></text> {{ item.rvol }}
       <text class="cuIcon-appreciatefill margin-lr-xs" bindtap="inc" data-field="gvol" data-id="{{ item.id }}"></text> {{ item.gvol }}
       <text class="cuIcon-messagefill margin-lr-xs" bindtap="showDetail" data-id="{{ item.id }}"></text> {{ item.cvol }}
@@ -33,6 +34,8 @@
 <view class="cu-list menu-avatar comment solids-top" style="padding-bottom:90rpx">
       <view class="cu-item" wx:for="{{ comments }}">
         <view class="cu-avatar round" style="background-image:url(' {{ avas[item.userid] }}');"></view>
+        <view class="cu-avatar round" style="background-image:url('{{ avas[item.userid] }}');" wx:if="{{ avas[item.userid] != null }}"></view>
+        <view wx:else class="cu-avatar round  bg-grey">{{ item.nickname[0] }}</view>
         <view class="content">
           <view class="text-grey">{{ item.nickname }}</view>
           <view class="text-gray text-content text-df">
@@ -56,3 +59,6 @@
   <input class="solid-bottom" bindfocus="InputFocus" bindblur="InputBlur" adjust-position="{{false}}" focus="{{false}}" maxlength="300" cursor-spacing="10" placeholder="想说些什么呀" data-field="content" bindinput="formInputChange"></input> 
   <button class="cu-btn bg-green shadow" bindtap="mySubmit">发送</button>
 </view>
+ 
+
+ 

@@ -2,7 +2,8 @@ let app = getApp();
 Page({
     data: {
         formData: {
-          nickname: ''
+          nickname: '',
+          alladd: 0
         },
         imgList: [],
         maxPicLength: 3,
@@ -14,6 +15,48 @@ Page({
 })
       let that = this
       that.initData() 
+    },
+    switchange(e) {
+      console.log(e) 
+      if (e.detail.value) {
+        let flag = false
+        qq.getSetting({
+          success(res) {
+            console.log("打开setting成功")
+            if (!res.authSetting['setting.addFriend']) {
+              qq.authorize({
+                scope: 'setting.addFriend',
+                success() {
+                  // 用户已经同意小程序使用录音功能，后续调用 qq.startRecord 接口不会弹窗询问 
+                  flag = true
+                },
+                fail(e) {
+                  console.log("用户不受权")
+                  console.log(e)
+                }
+              })
+            } else {
+              flag = true
+            }
+          },
+          fail(e) {
+            console.log(e)
+            console.log("fail")
+          },
+          complete(e) {
+            if (flag) { 
+              that.data.formData.alladd = 1
+            } else { 
+            }
+          }
+        })
+      } else {
+        this.data.formData.alladd = 0
+      }
+      this.setData({
+        [`formData.alladd`]: this.data.formData.alladd
+      })
+      console.log(this.data.formData)
     },
     initData() {
       let that = this

@@ -8,8 +8,43 @@ Page({
         isCard: true,
         imgCount: 0,
         imgs: {},
+        cimgids: {},
         avas: {},
-        InputBottom: 0
+        InputBottom: 0,   
+    },
+    addFriend(e) {
+        let that = this
+        const button = qq.createAddFriendButton({
+            type: 'text',
+            text: '添加好友',
+            style: {
+                left: 10,
+                top: 76,
+                width: 200,
+                height: 40,
+                lineHeight: 40,
+                backgroundColor: '#ff0000',
+                color: '#ffffff',
+                textAlign: 'center',
+                fontSize: 16,
+                borderRadius: 4
+            },
+            openid: that.data.posts[0].userid
+        })
+        button.show()
+    },
+    showBigImg(e) {   
+        let that = this
+        let imgids = this.data.posts[0].img.split("|") 
+        let urls = []
+        for (let i=0; i<imgids.length; ++i) {
+            urls.push(app.globalData.SERVER_URL + "index/post/imgRaw?imgid=" + imgids[i])
+        }
+        wx.previewImage({
+            urls: urls,
+            current: app.globalData.SERVER_URL + "index/post/imgRaw?imgid=" + e.currentTarget.dataset.imgid
+        })
+
     },
     onLoad: function (e) { 
       qq.showShareMenu({
@@ -68,6 +103,7 @@ Page({
                 if (res.data.code == 0) {    
                     that.data.posts[0] = res.data.data
                     that.data.posts[0].rimg = []
+                    that.data.posts[0].imgids = res.data.data.img.split("|")
                     that.setData({
                         [`posts[0]`]: that.data.posts[0]
                     })
@@ -115,6 +151,7 @@ Page({
                     let theImg = res.data.data.replace(/[\r\n]/g, "")
                     that.setData({ 
                             [`imgs.${imgCount}`]: theImg,
+                            [`cimgids.${imgCount}`]: imgId
                     }) 
                 }
             }
