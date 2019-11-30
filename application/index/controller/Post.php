@@ -3,18 +3,10 @@ namespace app\index\controller;
 
 class Post
 {
-    public function index() {
-        return strtotime("now");
-    }
-
     public function add()
     {
-        if (!request()->isPost()) {
-            return 'hi';
-        }
-
         $data = input('post.');
-        $user = model("user")->where('openid', $data['userid'])->find();
+        $user = model("user")->where('openid', $data['userid'])->field("gender")->find();
 
         $p = new \app\common\model\Post;
         $p->nickname = $data['nickname'];
@@ -49,13 +41,10 @@ class Post
     }
 
     public function all() {
-        if (!request()->isGet()) {
-            return 'hi';
-        }
         $data = input('get.');
         $page = $data['page'];
         $pageSize = $data['size'];
-        $list = model('post')->where('status','neq',-1)->order('id', 'desc')->paginate($pageSize, false, [
+        $list = model('post')->where('status','=',1)->field("id,nickname,content,img,openid,cretime,userid,gender,rvol,gvol,cvol,alladd")->order('id', 'desc')->paginate($pageSize, false, [
             "page" => $page
         ])->each(function($item, $key) {
             model('post')->where('id',$item['id'])->setInc('rvol');
@@ -64,13 +53,9 @@ class Post
         return apiReturn(0,"OK", $list);
     }
     public function img() {
-        if (!request()->isGet()) {
-            return "hi";
-        }
-
         $data = input('get.');
         if (!empty($data['userid'])) {
-            $user = model("user")->where('openid', $data['userid'])->find();
+            $user = model("user")->where('openid', $data['userid'])->field('avaid')->find();
             $data['imgid'] = $user->avaid;
         }
         $img = model('Pimg')->get($data['imgid']);
@@ -83,7 +68,7 @@ class Post
 
         $data = input('get.');
         if (!empty($data['userid'])) {
-            $user = model("user")->where('openid', $data['userid'])->find();
+            $user = model("user")->where('openid', $data['userid'])->field('avaid')->find();
             $data['imgid'] = $user->avaid;
         }
         $img = model('Pimg')->get($data['imgid']);
@@ -100,37 +85,22 @@ class Post
     }
 
     public function inc() {
-        if (!request()->isPost()) {
-            return 'hi';
-        }
         $data = input('post.');
 
         model('post')->where('id', $data['id'])->setInc($data['field'], $data['n']);
         return apiReturn(0, "OK", "");
     }
     public function comment() {
-        if (request()->isPost()) {
-            /*
-            $data = input('post.');
-            model('comment')->save($data);
-            model('post')->where('id', $data['postid'])->setInc('cvol');
-             */
-            return apReturn(0, "OK", "");
-        } else {
-            $data = input('get.');
-            $cs = model('comment')->where('postid', '=', $data['postid'])->where('status', '<>', '-1')->select();
-            for ($i=0; $i<count($cs); ++$i) {
-                $cs[$i]['cretime'] = date('Y年m月d日 H:i', $cs[$i]['cretime']);
-            }
-            return apiReturn(0, "OK", $cs);
+        $data = input('get.');
+        $cs = model('comment')->where('postid', '=', $data['postid'])->where('status', '=', '1')->field("content,userid,nickname,avaid,cretime,gender,gvol")->select();
+        for ($i=0; $i<count($cs); ++$i) {
+            $cs[$i]['cretime'] = date('Y年m月d日 H:i', $cs[$i]['cretime']);
         }
+        return apiReturn(0, "OK", $cs);
     }
     public function post() {
-        if (!request()->isGet()) {
-            return 'hi';
-        }
         $data = input('get.');
-        $post = model('post')->where('id', $data['postid'])->find();
+        $post = model('post')->where('id', $data['postid'])->field("id,nickname,content,img,openid,cretime,userid,gender,rvol,gvol,cvol,alladd")->find();
         $post['cretime'] = date('Y年m月d日 H:i', $post['cretime']);
 
         return apiReturn(0, "OK", $post);

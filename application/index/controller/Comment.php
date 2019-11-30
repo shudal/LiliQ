@@ -3,12 +3,9 @@ namespace app\index\controller;
 
 class Comment {
     public function add() {
-        if (!request()->isPost()) {
-            return 'hi';
-        }
         $data = input('post.');
 
-        $user = model('user')->where('openid', $data['userid'])->find();
+        $user = model('user')->where('openid', $data['userid'])->field("nickname,avaid,gender")->find();
         $data['nickname'] = $user->nickname;
         $data['avaid'] = $user->avaid;
         $data['gender'] = $user->gender;
@@ -18,9 +15,6 @@ class Comment {
         return apiReturn(0, "OK", "");
     }
     public  function inc() {
-        if (!request()->isPost()) {
-            return 'hi';
-        }
         $data = input('post.');
 
         model('comment')->where('id', $data['id'])->setInc($data['field'], $data['n']);

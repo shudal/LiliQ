@@ -3,16 +3,13 @@ namespace app\index\controller;
 
 class User {
     public function login() {
-        if (!request()->isPost()) {
-            return 'hi';
-        }
         $data = input('post.');
         $appid = config('qqapp.appid');
         $appsec = config('qqapp.appsecret');
         $theUrl = "https://api.q.qq.com/sns/jscode2session?appid=".$appid."&secret=".$appsec."&js_code=".$data['code']."&grant_type=authorization_code";
         $result = curl_get_https($theUrl);
         $result = json_decode($result);
-        $user = model('user')->where('openid',$result->openid)->find();
+        $user = model('user')->where('openid',$result->openid)->field('openid')->find();
         if ($user == null) {
             $ava = curl_get_https($data['avaurl']);
             $ava = "data:image/png;base64," . base64_encode($ava);
