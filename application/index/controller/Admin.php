@@ -50,4 +50,13 @@ class Admin {
         }
         return apiReturn(0, "OK", "");
     }
+    public function advice() {
+        if (!request()->isPost()) {
+            return "hi";
+        }
+        $data = input('post.');
+        $data['status'] = 1;
+        model('advice')->save($data);
+        return apiReturn(0, "OK", "");
+    }
 }

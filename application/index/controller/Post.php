@@ -23,6 +23,7 @@ class Post
         $p->userid = $data['userid'];
         $p->gender = $user->gender;
         $p->img = "";
+        $p->alladd = $data['alladd'];
         $p->save();
 
         if (!empty($data['img'])) {
@@ -75,6 +76,29 @@ class Post
         $img = model('Pimg')->get($data['imgid']);
         return apiReturn(0,"OK",$img->img);
     }
+    public function imgRaw() {
+        if (!request()->isGet()) {
+            return "hi";
+        }
+
+        $data = input('get.');
+        if (!empty($data['userid'])) {
+            $user = model("user")->where('openid', $data['userid'])->find();
+            $data['imgid'] = $user->avaid;
+        }
+        $img = model('Pimg')->get($data['imgid']);
+        $arr = preg_split("/(,|;)/",$img->img);//分隔三部分，data:image/png  base64  后面一堆
+        $base64Data = $arr[2];
+        $arr2 = explode('/',$arr[0]);      //分割出图片格式
+        $type = $arr2[1];
+        $fileName = 'tupian.'.$type;      //拼接图片名称
+        file_put_contents($fileName,base64_decode($base64Data));
+        $img = file_get_contents($fileName);
+        header("Content-Type:image/".$type.";text/html;charset=utf-8");
+        echo $img;
+        exit;
+    }
+
     public function inc() {
         if (!request()->isPost()) {
             return 'hi';
