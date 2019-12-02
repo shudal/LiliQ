@@ -15,7 +15,9 @@ class Post
         $p->userid = $data['userid'];
         $p->gender = $user->gender;
         $p->img = "";
-        $p->alladd = $data['alladd'];
+        if (!empty($data['alladd'])) {
+            $p->alladd = $data['alladd'];
+        }
         $p->save();
 
         if (!empty($data['img'])) {
@@ -44,12 +46,18 @@ class Post
         $data = input('get.');
         $page = $data['page'];
         $pageSize = $data['size'];
+        $ids = array();
+        $c = 0;
         $list = model('post')->where('status','=',1)->field("id,nickname,content,img,openid,cretime,userid,gender,rvol,gvol,cvol,alladd")->order('id', 'desc')->paginate($pageSize, false, [
             "page" => $page
-        ])->each(function($item, $key) {
-            model('post')->where('id',$item['id'])->setInc('rvol');
-            $item['cretime'] = date('Y年m月d日 H:i', $item['cretime']);
-        });
+        ]);
+        $listLen = count($list);
+        for ($i = 0; $i < $listLen; ++$i) {
+            $list[$i]['cretime'] = date('Y年m月d日 H:i', $list[$i]['cretime']);
+            $ids[] = $list[$i]['id'];
+        }
+        $a = model('post')->where('id', 'in', $ids)->setInc('rvol');
+        //dump($a);
         return apiReturn(0,"OK", $list);
     }
     public function img() {
