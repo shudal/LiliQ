@@ -16,7 +16,7 @@ Page({
         formData: null,
         comments: []
     },
-    getImgFor(pid, imgId) {
+    getImgFor(pid, imgId, postindex) {
         let that = this 
         wx.request({
         url: app.globalData.SERVER_URL + "index/post/img?imgid=" + imgId, 
@@ -24,15 +24,9 @@ Page({
         success(res) {
             console.log(res);
             if (res.data.code == 0) {    
-                let i=0;
+                let i=postindex;
                 let imgCount = that.data.imgCount + 1
-                for (; i<that.data.posts.length; ++i) {
-                    if (that.data.posts[i].id == pid) {
-                        console.log("得到图片id=" + imgId)
-                        that.data.posts[i].rimg.push(imgCount) 
-                        break
-                    }
-                } 
+                that.data.posts[postindex].rimg.push(imgCount); 
                 that.setData({
                     [`posts[${i}].rimg`]: that.data.posts[i].rimg,
                     imgCount: imgCount
@@ -40,17 +34,7 @@ Page({
                 let theImg = res.data.data.replace(/[\r\n]/g, "")
                 that.setData({ 
                         [`imgs.${imgCount}`]: theImg,
-                })
-                /*
-                try { 
-                    that.setData({ 
-                        [`imgs.${imgCount}`]: res.data.data,
-                    })
-                } catch (err) {
-                    console.log("设置图片错误");
-                    console.log(err)
-                } 
-                */
+                }) 
             }
         }
         })  
@@ -77,7 +61,7 @@ Page({
                 console.log(that.data.posts[i].img)
                 let aPostImgs = that.data.posts[i].img.split("|") 
                 for (let k=0; k<aPostImgs.length; ++k) {
-                    that.getImgFor(that.data.posts[i].id, aPostImgs[k])
+                    that.getImgFor(that.data.posts[i].id, aPostImgs[k], i)
                 } 
             }
             let postUserId = that.data.posts[i].userid
@@ -182,16 +166,13 @@ Page({
         let formData = {}
         formData.id = e.currentTarget.dataset.id
         formData.field = e.currentTarget.dataset.field
-        formData.n = 1
-        for (let i=0; i<that.data.posts.length; ++i) { 
-            if (that.data.posts[i].id == formData.id) {
-                that.data.posts[i].gvol += 1
-                that.setData({
-                    [`posts[${i}]`]: that.data.posts[i]
-                })
-                break
-            }
-        }
+        formData.n = 1  
+        let index = parseInt(e.currentTarget.dataset.index);
+        console.log(index)       
+        that.data.posts[index].gvol += 1;
+        that.setData({
+            [`posts[${index}]`]: that.data.posts[index]
+        })
         wx.request({
             url: app.globalData.SERVER_URL + "index/post/inc",
             method: "POST",

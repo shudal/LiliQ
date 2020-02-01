@@ -49,9 +49,7 @@
           </view>
         </view>
       </view> 
-    </view>
-
-  
+    </view> 
 
 
 
@@ -60,5 +58,4 @@
   <button class="cu-btn bg-green shadow" bindtap="mySubmit">发送</button>
 </view>
  
-
  

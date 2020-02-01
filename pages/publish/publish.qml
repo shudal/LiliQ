@@ -3,10 +3,12 @@
 		<view class="title">昵称</view>
 		<input data-field="nickname" bindinput="formInputChange" placeholder="{{userInfo == null ? '佚名' : userInfo.nickName }}"></input>
 	</view>
+	<!--
 	<view class="cu-form-group">
 		<view class="title">允许ta人添加我为好友</view>
 		<switch class="orange radius sm" bindchange="switchange"></switch>
 	</view>
+	-->
     <view class="cu-bar bg-white margin-top">
 		<view class="action">
 			图片上传

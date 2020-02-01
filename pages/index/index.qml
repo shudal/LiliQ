@@ -4,7 +4,7 @@
    
 </script>
 
-<view class="cu-card dynamic {{isCard?'no-card':''}}" wx:for="{{ posts }}">
+<view class="cu-card dynamic {{isCard?'no-card':''}}" wx:for="{{ posts }}" wx:for-index="index">
   <view class="cu-item shadow">
     <view class="cu-list menu-avatar">
       <view class="cu-item">
@@ -30,7 +30,7 @@
     </view>
     <view class="text-gray text-sm text-right padding">
       <text class="cuIcon-attentionfill margin-lr-xs"></text> {{ item.rvol }}
-      <text class="cuIcon-appreciatefill margin-lr-xs" bindtap="inc" data-field="gvol" data-id="{{ item.id }}"></text> {{ item.gvol }}
+      <text class="cuIcon-appreciatefill margin-lr-xs" bindtap="inc" data-field="gvol" data-id="{{ item.id }}" data-index="{{ index }}"></text> {{ item.gvol }}
       <text class="cuIcon-messagefill margin-lr-xs" bindtap="showDetail" data-id="{{ item.id }}"></text> {{ item.cvol }}
     </view>
   </view>

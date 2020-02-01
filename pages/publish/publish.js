@@ -26,8 +26,7 @@ Page({
             if (!res.authSetting['setting.addFriend']) {
               qq.authorize({
                 scope: 'setting.addFriend',
-                success() {
-                  // 用户已经同意小程序使用录音功能，后续调用 qq.startRecord 接口不会弹窗询问 
+                success() { 
                   flag = true
                 },
                 fail(e) {
