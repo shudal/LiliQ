@@ -18,6 +18,15 @@ class Post
         if (!empty($data['alladd'])) {
             $p->alladd = $data['alladd'];
         }
+        if (!empty($data['type'])) {
+            $p->ttype = $data['type'];
+            // corse
+            if ($data['type'] == 2) {
+                $p->year = $data['year'];
+                $p->coursename = $data['coursename'];
+                $p->teacher = $data['teacher'];
+            }
+        }
         $p->save();
 
         if (!empty($data['img'])) {
@@ -42,19 +51,61 @@ class Post
         return apiReturn(0, "OK", []);
     }
 
-    public function all() {
+    public function search() {
         $data = input('get.');
         $page = $data['page'];
         $pageSize = $data['size'];
         $ids = array();
         $c = 0;
-        $list = model('post')->where('status','=',1)->field("id,nickname,content,img,openid,cretime,userid,gender,rvol,gvol,cvol,alladd")->order('id', 'desc')->paginate($pageSize, false, [
+
+        $whereData = [];
+        $whereData[] = ['status', '=', 1];
+        if (!empty($data['type']) && $data['type'] != "") {
+            $whereData[] = ['ttype', '=', $data['type']];
+            if ($data['type'] == config('code.TYPE_COURSE')) {
+                if (!empty($data['year'])) {
+                    $whereData[] = ['year', '=', $data['year']];
+                }
+                if (!empty($data['coursename'])) {
+                    $whereData[] = ['coursename', 'like', "%".$data['coursename']."%"];
+                }
+                if (!empty($data['teacher'])) {
+                    $whereData[] = ['teacher', 'like', "%".$data['teacher']."%"];
+                }
+            }
+        }
+        if (!empty($data['content'])) {
+            $whereData[] = ['content', 'like', "%" . $data['content'] . "%"];
+        }
+
+        $list = model('post')->where($whereData)->field("id,nickname,content,img,openid,cretime,userid,gender,rvol,gvol,cvol,alladd,ttype,coursename,teacher,year")->order('id', 'desc')->paginate($pageSize, false, [
             "page" => $page
         ]);
         $listLen = count($list);
         for ($i = 0; $i < $listLen; ++$i) {
             $list[$i]['cretime'] = date('Y年m月d日 H:i', $list[$i]['cretime']);
             $ids[] = $list[$i]['id'];
+            $list[$i]['type'] = $list[$i]['ttype'];
+        }
+        $a = model('post')->where('id', 'in', $ids)->setInc('rvol');
+        //dump($a);
+        return apiReturn(0,"OK", $list);
+
+    }
+    public function all() {
+        $data = input('get.');
+        $page = $data['page'];
+        $pageSize = $data['size'];
+        $ids = array();
+        $c = 0;
+        $list = model('post')->where('status','=',1)->field("id,nickname,content,img,openid,cretime,userid,gender,rvol,gvol,cvol,alladd,ttype,coursename,teacher,year")->order('id', 'desc')->paginate($pageSize, false, [
+            "page" => $page
+        ]);
+        $listLen = count($list);
+        for ($i = 0; $i < $listLen; ++$i) {
+            $list[$i]['cretime'] = date('Y年m月d日 H:i', $list[$i]['cretime']);
+            $ids[] = $list[$i]['id'];
+            $list[$i]['type'] = $list[$i]['ttype'];
         }
         $a = model('post')->where('id', 'in', $ids)->setInc('rvol');
         //dump($a);
@@ -108,8 +159,9 @@ class Post
     }
     public function post() {
         $data = input('get.');
-        $post = model('post')->where('id', $data['postid'])->field("id,nickname,content,img,openid,cretime,userid,gender,rvol,gvol,cvol,alladd")->find();
+        $post = model('post')->where('id', $data['postid'])->field("id,nickname,content,img,openid,cretime,userid,gender,rvol,gvol,cvol,alladd,ttype,coursename,teacher,year")->find();
         $post['cretime'] = date('Y年m月d日 H:i', $post['cretime']);
+        $post['type'] = $post['ttype'];
 
         return apiReturn(0, "OK", $post);
     }
