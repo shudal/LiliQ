@@ -9,19 +9,28 @@
 		"postcss": true,
 		"minified": true,
 		"newFeature": true,
-		"autoAudits": false
+		"autoAudits": false,
+		"remoteDebugLogEnable": false,
+		"uploadWithSourceMap": true,
+		"nodeModules": true,
+		"uglifyFileName": true
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.4.2",
 	"appid": "wxfd5241d66a07713f",
-	"projectname": "ColorUI-template",
+	"projectname": "kaixuehaveclass",
 	"debugOptions": {
 		"hidedInDevtools": []
 	},
 	"isGameTourist": false,
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
-	"qqappid": "1109937046",
+	"qqappid": "1110187981",
+	"scripts": {
+		"beforeCompile": "",
+		"beforePreview": "",
+		"beforeUpload": ""
+	},
 	"condition": {
 		"search": {
 			"current": -1,

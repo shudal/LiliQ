@@ -3,12 +3,13 @@
     "pages/index/index",
     "pages/me/me",
     "pages/publish/publish",
-    "pages/detail/detail"
+    "pages/detail/detail",
+    "pages/search/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "理里表白",
+    "navigationBarTitleText": "开学有课",
     "navigationBarTextStyle":"black"
   },
   "tabBar": {
@@ -26,7 +27,13 @@
         "pagePath": "pages/publish/publish",
         "iconPath": "static/img/发布前.png",
         "selectedIconPath": "static/img/发布后.png",
-        "text": "表白"
+        "text": "絮叨"
+      },
+      {
+        "pagePath": "pages/search/index",
+        "iconPath": "static/img/搜索.png",
+        "selectedIconPath": "static/img/搜索后.png",
+        "text": "筛选"
       },
       {
         "pagePath": "pages/me/me",

@@ -18,7 +18,7 @@
     <view class="cu-item arrow " bindtap="showModal" data-target="aboutLili">
       <view class="content">
         <image src="/static/img/logo.png" class="png" mode="aspectFit"></image>
-        <text class="text-grey">关于理里表白墙</text>
+        <text class="text-grey">关于理里有课</text>
       </view>
     </view>  
     <view class="cu-item arrow" bindtap="showModal" data-target="advice">
@@ -39,13 +39,13 @@
   <view class="cu-modal {{modalName=='aboutLili'?'show':''}}">
   <view class="cu-dialog">
     <view class="cu-bar bg-white justify-end">
-      <view class="content">关于理里</view>
+      <view class="content">关于</view>
       <view class="action" bindtap="hideModal">
         <text class="cuIcon-close text-red"></text>
       </view>
     </view>
     <view class="padding-xl">
-      一只奔跑ing的墙~
+      泥想看什么鸭~
     </view>
   </view>
   </view>

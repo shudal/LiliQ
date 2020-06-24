@@ -1,4 +1,11 @@
 let app = getApp(); 
+
+const TYPE_LOVE = 1
+const TYPE_COURSE = 2
+const TYPE_LOST = 3
+const TYPE_SHOP  = 4;
+
+import {baseDecode} from "../../utils/util"
 Page({
     data: {
         posts: [ 
@@ -14,7 +21,24 @@ Page({
         },
         showedAll: false, 
         formData: null,
-        comments: []
+        comments: [],
+        getPostBaseUrl: "index/post/search?",
+        addiRequestParam: {}
+    },
+    onLoad: function (e) {
+        let that = this  
+
+        console.log(e)
+        if (e.type != null) {
+            console.log(e.url)
+            this.setData({
+                addiRequestParam: e
+            })
+        }
+        qq.showShareMenu({
+            showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
+        })
+        that.realGetPost()
     },
     getImgFor(pid, imgId, postindex) {
         let that = this 
@@ -75,8 +99,12 @@ Page({
         wx.showLoading({
             title: '加载ing'
         })
+        let url = app.globalData.SERVER_URL + that.data.getPostBaseUrl + "&size=" + that.data.pageSize + "&page=" + that.data.page
+        for (let key in that.data.addiRequestParam) {
+            url = url + "&" + key + "=" + that.data.addiRequestParam[key]
+        }
         wx.request({
-            url: app.globalData.SERVER_URL + "index/post/all?size=" + that.data.pageSize + "&page=" + that.data.page, 
+            url:  url,
             method: "GET",
             success(res) {
                 console.log(res);
@@ -85,9 +113,26 @@ Page({
                     let tposts = res.data.data.data
                     for (let i=0; i<tposts.length; ++i) {
                         tposts[i].rimg = []
+                        if (tposts[i].type == TYPE_COURSE) {
+                            if (tposts[i].teacher != '') {
+                                tposts[i].content = "【" + tposts[i].teacher + "】" + tposts[i].content
+                            }
+                            if (tposts[i].coursename != '') {
+                                tposts[i].content = "【" + tposts[i].coursename + "】" + tposts[i].content
+                            }
+                            if (tposts[i].year != '') {
+                                tposts[i].content = "【" + tposts[i].year + "】" + tposts[i].content
+                            }
+                        }
                     }
+                    
                     that.data.posts = that.data.posts.concat(tposts)
                     that.data.maxPage = res.data.data.last_page
+                    if (that.data.maxPage <= 1) {
+                        that.setData({
+                            showedAll: true
+                        })
+                    }
                     that.setData({
                         page: that.data.page,
                         posts: that.data.posts,
@@ -100,13 +145,6 @@ Page({
                 wx.hideLoading()
             }
         }); 
-    },
-    onLoad: function (e) {
-        let that = this  
-        qq.showShareMenu({
-            showShareItems: ['qq', 'qzone', 'wechatFriends', 'wechatMoment']
-        })
-        that.realGetPost()
     },
     realGetPost() { 
         let that = this
@@ -143,6 +181,11 @@ Page({
         let that = this; 
         if (that.data.posts.length < 1) {
             return
+        }
+        
+        let url = app.globalData.SERVER_URL + that.data.getPostBaseUrl + "&size=1&page=1"
+        for (let key in that.data.addiRequestParam) {
+            url = url + "&" + key + "=" + that.data.addiRequestParam[key]
         }
         wx.request({
             url: app.globalData.SERVER_URL + "index/post/all?size=1&page=1", 

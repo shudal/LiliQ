@@ -9,6 +9,36 @@
 		<switch class="orange radius sm" bindchange="switchange"></switch>
 	</view>
 	-->
+	
+	<view class="cu-form-group margin-top" >
+		<view class="title">普通</view>
+		<switch bindchange="switchLove" checked="{{ switchloveChecked }}"></switch>
+	</view>
+	<view class="cu-form-group margin-top" wx:if="{{ showType }}">
+		<view class="title">分类</view>
+		<picker bindchange="PickerChange" value="{{pickerindex}}" range="{{picker}}">
+			<view class="picker">
+				{{pickerindex?picker[pickerindex]:'课程'}}
+			</view>
+		</picker>
+	</view>
+	<view class="cu-form-group margin-top" wx:if="{{ showTypeCourse }}">
+		<view class="title">年级</view>
+		<picker bindchange="PickerYearChange" value="{{pickeryearindex}}" range="{{pickeryear}}">
+			<view class="picker">
+				{{pickeryearindex?pickeryear[pickeryearindex]:'2019'}}
+			</view>
+		</picker>
+	</view>
+	
+	<view class="cu-form-group" wx:if="{{ showTypeCourse }}">
+		<view class="title">课程名称</view>
+		<input placeholder="OvO" data-field="coursename" bindinput="formInputChange" ></input>
+	</view>
+	<view class="cu-form-group" wx:if="{{ showTypeCourse }}"  >
+		<view class="title">任课教师</view>
+		<input placeholder="OvO" data-field="teacher" bindinput="formInputChange"></input>
+	</view>
     <view class="cu-bar bg-white margin-top">
 		<view class="action">
 			图片上传
@@ -31,7 +61,7 @@
 		</view>
 	</view>
     <view class="cu-form-group margin-top">
-		<textarea maxlength="-1" disabled="{{modalName!=null}}" data-field="content" bindinput="formInputChange"  placeholder="言语传达心意~"></textarea>
+		<textarea maxlength="-1" disabled="{{modalName!=null}}" data-field="content" bindinput="formInputChange"  placeholder="我一句话也不说~"></textarea>
 	</view>
 	
 	<view class="padding flex flex-direction">

@@ -53,8 +53,8 @@ App({
   },
   globalData: {
     userInfo: null,
-    SERVER_URL: "https://qqapp.heing.fun/",
-    code: ''
+    SERVER_URL: "https://tokenlili.heing.fun/",
+    code: '', 
   }, 
   login() {
     let formData = {} 

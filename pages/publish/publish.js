@@ -1,13 +1,37 @@
 let app = getApp();
+
+const TYPE_LOVE = 1
+const TYPE_COURSE = 2
+const TYPE_LOST = 3
+const TYPE_SHOP  = 4;
 Page({
     data: {
         formData: {
           nickname: '',
-          alladd: 0
+          alladd: 0,
+          type: 1,
+          year: 2019
         },
         imgList: [],
         maxPicLength: 3,
-        userInfo: null
+        userInfo: null,
+        showType: false,
+        picker: ['课程', '失物', '集市', '普通'],
+        pickeryear: ['2019', '2018', '2017', '2016'],
+        pickertype: [TYPE_COURSE, TYPE_LOST, TYPE_SHOP, TYPE_LOVE],
+        switchloveChecked: true
+    },
+    getPicerIndexFromType(type) {
+      switch(type) {
+        case TYPE_COURSE:
+          return 0; break;
+        case TYPE_LOST:
+          return 1; break;
+        case TYPE_SHOP:
+          return 2; break;
+        case TYPE_LOVE:
+          return 3; break;
+      }
     },
     onShow: function (e) {
       qq.showShareMenu({
@@ -15,6 +39,62 @@ Page({
 })
       let that = this
       that.initData() 
+    },
+    
+    PickerChange(e) {
+      console.log(e.detail.value);
+      let type = this.data.pickertype[e.detail.value]
+      this.setData({
+        pickerindex: e.detail.value, 
+        [`formData.type`]: type
+      }) 
+      this.showTypeDetail();
+    },
+    PickerYearChange(e) {
+      console.log(e.detail.value);
+      let y = this.data.pickeryear[e.detail.value];
+      this.setData({
+        pickeryearindex: e.detail.value, 
+        [`formData.year`]: y
+      }) 
+    },
+    showTypeDetail() { 
+      if (this.data.formData.type == TYPE_COURSE) {
+        this.setData({
+          showTypeCourse: true
+        })
+      } else {
+        this.setData({
+          showTypeCourse: false
+        })
+      }
+
+      if (this.data.formData.type == TYPE_LOVE) {
+        this.setData({
+          showType: false,
+          switchloveChecked: true
+        })
+      }
+      
+      let pickerindex = this.getPicerIndexFromType(this.data.formData.type) 
+      this.setData({
+        pickerindex: pickerindex
+      })
+    },
+    switchLove(e) {
+      console.log(e.detail.value)
+      if (!e.detail.value) {
+        this.setData({
+          showType: true,
+          [`formData.type`]: TYPE_COURSE
+        }) 
+        this.showTypeDetail();
+      } else { 
+        this.setData({
+          [`formData.type`]: TYPE_LOVE
+        })
+        this.showTypeDetail();
+      }
     },
     switchange(e) {
       console.log(e) 
@@ -152,6 +232,22 @@ Page({
     if (formData.content == null || formData.content == "") {
       flag = false
       noti = "内容太少拉"
+    }
+
+    if (formData.type == TYPE_COURSE) {
+      if (formData.coursename == null || formData.coursename == "") { 
+        flag = false
+        noti = "课程名称更详细一点趴~"
+      } else if (formData.teacher == null || formData.teacher == "") { 
+        flag = false
+        noti = "老师名字更详细一点趴"
+      } else if (formData.coursename.length >= 30) {
+        flag = false
+        noti = "课程名称太详细啦"
+      } else if (formData.teacher.length >= 15) {
+        flag = false
+        noti = "老师名字太详细啦"
+      }
     }
 
     if (formData.userid != null) {

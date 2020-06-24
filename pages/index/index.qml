@@ -4,6 +4,8 @@
    
 </script>
 
+
+
 <view class="cu-card dynamic {{isCard?'no-card':''}}" wx:for="{{ posts }}" wx:for-index="index">
   <view class="cu-item shadow">
     <view class="cu-list menu-avatar">

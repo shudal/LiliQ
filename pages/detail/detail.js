@@ -1,4 +1,9 @@
 let app = getApp()
+
+const TYPE_LOVE = 1
+const TYPE_COURSE = 2
+const TYPE_LOST = 3
+const TYPE_SHOP  = 4;
 Page({
     data: {
         formData: {},
@@ -104,6 +109,17 @@ Page({
                     that.data.posts[0] = res.data.data
                     that.data.posts[0].rimg = []
                     that.data.posts[0].imgids = res.data.data.img.split("|")
+                    if (that.data.posts[0].type == TYPE_COURSE) {
+                            if (that.data.posts[0].teacher != '') {
+                                that.data.posts[0].content = "【" + that.data.posts[0].teacher + "】" + that.data.posts[0].content
+                            }
+                            if (that.data.posts[0].coursename != '') {
+                                that.data.posts[0].content = "【" + that.data.posts[0].coursename + "】" + that.data.posts[0].content
+                            }
+                            if (that.data.posts[0].year != '') {
+                                that.data.posts[0].content = "【" + that.data.posts[0].year + "】" + that.data.posts[0].content
+                            }
+                    }
                     that.setData({
                         [`posts[0]`]: that.data.posts[0]
                     })
